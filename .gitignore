@@ -45,3 +45,6 @@ _deps
 
 # Ignore Antlr's build directory
 .antlr
+
+# Ignore build folder (any case)
+[bB]uild
