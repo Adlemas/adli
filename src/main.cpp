@@ -1,12 +1,19 @@
 #include <iostream>
 #include <tokenizer.h>
 #include <astparser.h>
+#include <filereader.h>
 
 int main()
 {
-    std::string source;
-    std::cout << "Enter source: ";
-    std::getline(std::cin, source);
+    // std::string source;
+    // std::cout << "Enter source: ";
+    // std::getline(std::cin, source);
+
+    FileReader file("../test/multiple_expressions.adli");
+
+    std::string source = file.read();
+
+    std::cout << "Source: " << source << std::endl;
 
     Tokenizer tokenizer(source);
     tokenizer.tokenize();
@@ -22,9 +29,12 @@ int main()
 
     Parser parser(&tokenizer);
 
-    int result = parser.parse();
+    std::vector<int> result = parser.parse();
 
-    std::cout << "Result: " << result << std::endl;
+    for (int i = 0; i < result.size(); i++)
+    {
+        std::cout << "Result #" << i + 1 << ": " << result[i] << std::endl;
+    }
 
     return 0;
 }
