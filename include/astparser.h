@@ -20,11 +20,13 @@ class Parser
 
     int expr();
 
+    std::vector<int> prog();
+
 public:
     Parser(Tokenizer *tokenizer);
     ~Parser();
 
-    int parse();
+    std::vector<int> parse();
 };
 
 #endif // PARSER_H

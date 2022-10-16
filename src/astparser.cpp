@@ -1,6 +1,9 @@
 
 #include <astparser.h>
 
+// DEBUG:
+#include <iostream>
+
 void Parser::init()
 {
     m_current_token = m_tokenizer->next_token();
@@ -104,7 +107,20 @@ Parser::~Parser()
 {
 }
 
-int Parser::parse()
+std::vector<int> Parser::prog()
 {
-    return expr();
+    std::vector<int> results;
+
+    while (m_current_token->type != Token::_EOF)
+    {
+        results.push_back(expr());
+        eat(Token::WHITESPACE);
+    }
+
+    return results;
+}
+
+std::vector<int> Parser::parse()
+{
+    return prog();
 }
