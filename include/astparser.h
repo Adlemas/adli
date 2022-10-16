@@ -3,30 +3,138 @@
 
 #include <tokenizer.h>
 
-class Parser
+namespace ast
 {
-    Tokenizer *m_tokenizer;
-    Token *m_current_token;
 
-    void init();
+    namespace nodes
+    {
+        enum _LiteralType
+        {
+            UNDEFINED,
+            INT,
+            FLOAT,
+            STRING,
+            BOOL,
+        };
+        typedef enum _LiteralType LiteralType;
 
-    void error();
+        enum _NodeType
+        {
+            BINARY,
+            UNARY,
+            LITERAL,
+            VARIABLE_DECLARATION,
+            VARIABLE_ASSIGNMENT,
+            VARIABLE,
+            STATEMENTS,
+            // TODO: Implement statement node type
+            STATEMENT,
+        };
+        typedef enum _NodeType NodeType;
 
-    void eat(Token::Type type);
+        class Node
+        {
+            NodeType m_type;
 
-    int factor();
+        public:
+            Node(NodeType type);
 
-    int term();
+            virtual ~Node() = 0;
 
-    int expr();
+            NodeType type();
+        };
 
-    std::vector<int> prog();
+        class LiteralNode : public Node
+        {
+            LiteralType m_type;
+            void *m_value;
 
-public:
-    Parser(Tokenizer *tokenizer);
-    ~Parser();
+        public:
+            LiteralNode(LiteralType type, void *value);
+            ~LiteralNode();
 
-    std::vector<int> parse();
-};
+            LiteralType literal_type();
+            void *value();
+        };
+
+        enum _Operator
+        {
+            NONE,
+            PLUS,
+            MINUS,
+            MULTIPLY,
+            DIVIDE,
+            MODULO,
+        };
+        typedef enum _Operator Operator;
+
+        class BinaryNode : public Node
+        {
+
+            Node *m_left;
+            Node *m_right;
+            Operator m_operator;
+
+        public:
+            BinaryNode(Node *left, Node *right);
+            BinaryNode(Node *left, Node *right, Operator op);
+            ~BinaryNode();
+
+            Node *left();
+            Node *right();
+            Operator op();
+
+            void setLeft(Node *left);
+            void setRight(Node *right);
+            void setOp(Operator op);
+        };
+
+        class StatementsNode : public Node
+        {
+            std::vector<Node *> *m_statements;
+
+            Node *m_statement;
+            int m_index = 0;
+
+        public:
+            StatementsNode();
+            ~StatementsNode();
+
+            void addStatement(Node *statement);
+            std::vector<Node *> *statements();
+
+            void reset();
+            void next();
+        };
+
+    }
+
+    class Parser
+    {
+        Tokenizer *m_tokenizer;
+        Token *m_current_token;
+
+        void init();
+
+        void error();
+
+        void eat(Token::Type type);
+
+        nodes::Node *factor();
+
+        nodes::Node *term();
+
+        nodes::Node *expr();
+
+        nodes::StatementsNode *prog();
+
+    public:
+        Parser(Tokenizer *tokenizer);
+        ~Parser();
+
+        nodes::StatementsNode *parse();
+    };
+
+} // namespace ast
 
 #endif // PARSER_H
