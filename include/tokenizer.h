@@ -13,6 +13,7 @@ struct _Token
         MULTIPLY,
         DIVIDE,
         MODULO,
+        SEMICOLON,
         PAREN_OPEN,
         PAREN_CLOSE,
         INT,

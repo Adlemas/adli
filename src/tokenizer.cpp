@@ -10,6 +10,7 @@ static const Token TOKENS[] = {
     Token(Token::MODULO, "%"),
     Token(Token::PAREN_OPEN, "("),
     Token(Token::PAREN_CLOSE, ")"),
+    Token(Token::SEMICOLON, ";"),
     Token(Token::WHITESPACE, " "),
     Token(Token::WHITESPACE, "\t"),
     Token(Token::WHITESPACE, "\r"),
@@ -73,7 +74,7 @@ void Tokenizer::tokenize()
             if (c == TOKENS[j].value[0])
             {
                 // do not add whitespace tokens apart from the newline token
-                if (TOKENS[j].type == Token::WHITESPACE && c != '\n')
+                if (TOKENS[j].type == Token::WHITESPACE)
                 {
                     break;
                 }
