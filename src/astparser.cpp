@@ -114,7 +114,7 @@ std::vector<int> Parser::prog()
     while (m_current_token->type != Token::_EOF)
     {
         results.push_back(expr());
-        eat(Token::WHITESPACE);
+        eat(Token::SEMICOLON);
     }
 
     return results;
