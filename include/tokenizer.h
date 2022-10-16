@@ -14,6 +14,7 @@ struct _Token
         DIVIDE,
         MODULO,
         SEMICOLON,
+        COMMENT,
         PAREN_OPEN,
         PAREN_CLOSE,
         INT,
@@ -45,6 +46,7 @@ public:
     ~Tokenizer();
 
     void tokenize();
+    void reset();
     Token *next_token();
 };
 

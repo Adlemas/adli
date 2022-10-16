@@ -68,6 +68,33 @@ void Tokenizer::tokenize()
     {
         char c = m_source[i];
 
+        // check if comment
+        if (c == '/')
+        {
+            if (m_source[i + 1] == '/')
+            {
+                // comment
+                std::string comment = "//";
+
+                // get the rest of the comment
+                for (int j = i + 2; j < m_source.length(); j++)
+                {
+                    if (m_source[j] == '\r' || m_source[j] == '\n')
+                    {
+                        break;
+                    }
+
+                    comment += m_source[j];
+                }
+
+                m_tokens->push_back(new Token(Token::COMMENT, comment));
+
+                // skip the rest of the comment
+                i += comment.length() - 1;
+                continue;
+            }
+        }
+
         // check if the character is a token
         for (int j = 0; j < sizeof(TOKENS) / sizeof(Token); j++)
         {
@@ -109,4 +136,9 @@ void Tokenizer::tokenize()
 
     // add EOF token
     m_tokens->push_back(new Token(Token::_EOF, "EOF"));
+}
+
+void Tokenizer::reset()
+{
+    m_index = 0;
 }
