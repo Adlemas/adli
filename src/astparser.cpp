@@ -113,6 +113,12 @@ std::vector<int> Parser::prog()
 
     while (m_current_token->type != Token::_EOF)
     {
+        // Comment
+        if (m_current_token->type == Token::COMMENT)
+        {
+            eat(Token::COMMENT);
+            continue;
+        }
         results.push_back(expr());
         eat(Token::SEMICOLON);
     }
