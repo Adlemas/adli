@@ -48,3 +48,6 @@ _deps
 
 # Ignore build folder (any case)
 [bB]uild
+
+# Ignore vscode folder
+.vscode
