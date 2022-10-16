@@ -12,6 +12,7 @@ struct _Token
         MINUS,
         MULTIPLY,
         DIVIDE,
+        MODULO,
         PAREN_OPEN,
         PAREN_CLOSE,
         INT,

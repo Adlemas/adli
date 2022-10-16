@@ -7,6 +7,7 @@ static const Token TOKENS[] = {
     Token(Token::MINUS, "-"),
     Token(Token::MULTIPLY, "*"),
     Token(Token::DIVIDE, "/"),
+    Token(Token::MODULO, "%"),
     Token(Token::PAREN_OPEN, "("),
     Token(Token::PAREN_CLOSE, ")"),
     Token(Token::WHITESPACE, " "),
@@ -32,7 +33,12 @@ void Tokenizer::init()
 
 Tokenizer::~Tokenizer()
 {
-    std::cout << "Tokenizer::~Tokenizer()" << std::endl;
+    for (Token *token : *m_tokens)
+    {
+        delete token;
+    }
+
+    delete m_tokens;
 }
 
 Token *Tokenizer::next_token()
@@ -99,8 +105,6 @@ void Tokenizer::tokenize()
             m_tokens->push_back(new Token(Token::INT, value));
         }
     }
-
-    std::cout << "There are " << m_tokens->size() << " tokens." << std::endl;
 
     // add EOF token
     m_tokens->push_back(new Token(Token::_EOF, "EOF"));
