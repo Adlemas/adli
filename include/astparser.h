@@ -92,8 +92,6 @@ namespace ast
         class StatementsNode : public Node
         {
             std::vector<Node *> *m_statements;
-
-            Node *m_statement;
             int m_index = 0;
 
         public:
@@ -105,6 +103,9 @@ namespace ast
 
             void reset();
             void next();
+            Node *current();
+
+            unsigned long int size();
         };
 
     }
