@@ -118,14 +118,7 @@ namespace ast
 
         void StatementsNode::next()
         {
-            if (m_index < m_statements->size())
-            {
-                m_statement = m_statements->at(m_index++);
-            }
-            else
-            {
-                m_statement = NULL;
-            }
+            m_index++;
         }
 
         void StatementsNode::reset()
@@ -134,6 +127,20 @@ namespace ast
             next();
         }
 
+        Node *StatementsNode::current()
+        {
+            if (m_index >= m_statements->size())
+            {
+                return NULL;
+            }
+
+            return m_statements->at(m_index);
+        }
+
+        unsigned long int StatementsNode::size()
+        {
+            return m_statements->size();
+        }
     } // namespace nodes
 
     // Parser class implementation
