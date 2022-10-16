@@ -64,78 +64,124 @@ Token *Tokenizer::next_token()
  */
 void Tokenizer::tokenize()
 {
-    for (int i = 0; i < m_source.length(); i++)
+    for (pos = 0; pos < m_source.length(); pos++)
     {
-        char c = m_source[i];
+        char c = m_source[pos];
 
-        // check if comment
-        if (c == '/')
+        // comments
+        if (comment())
         {
-            if (m_source[i + 1] == '/')
-            {
-                // comment
-                std::string comment = "//";
-
-                // get the rest of the comment
-                for (int j = i + 2; j < m_source.length(); j++)
-                {
-                    if (m_source[j] == '\r' || m_source[j] == '\n')
-                    {
-                        break;
-                    }
-
-                    comment += m_source[j];
-                }
-
-                m_tokens->push_back(new Token(Token::COMMENT, comment));
-
-                // skip the rest of the comment
-                i += comment.length() - 1;
-                continue;
-            }
+            continue;
         }
 
-        // check if the character is a token
-        for (int j = 0; j < sizeof(TOKENS) / sizeof(Token); j++)
+        // token
+        // Ignore the return value of token() because we don't care if it
+        // returns true or false. We just want to check if it's a token.
+        token();
+
+        // digit
+        // Ignore the return value of digit() because we don't care if it's a
+        // digit or not.
+        digit();
+    }
+
+    // EOF
+    eof();
+}
+
+bool Tokenizer::token()
+{
+    char c = m_source[pos];
+
+    // check if the character is a token
+    for (int j = 0; j < sizeof(TOKENS) / sizeof(Token); j++)
+    {
+        if (c == TOKENS[j].value[0])
         {
-            if (c == TOKENS[j].value[0])
+            // do not add whitespace tokens apart from the newline token
+            if (TOKENS[j].type == Token::WHITESPACE)
             {
-                // do not add whitespace tokens apart from the newline token
-                if (TOKENS[j].type == Token::WHITESPACE)
-                {
-                    break;
-                }
-                m_tokens->push_back(new Token(TOKENS[j].type, TOKENS[j].value));
+                break;
+            }
+            m_tokens->push_back(new Token(TOKENS[j].type, TOKENS[j].value));
+            break;
+        }
+    }
+
+    return false;
+}
+
+bool Tokenizer::eof()
+{
+    // add EOF token
+    m_tokens->push_back(new Token(Token::_EOF, "EOF"));
+
+    return true;
+}
+
+bool Tokenizer::digit()
+{
+    char c = m_source[pos];
+
+    // check if the character is a digit
+    if (isdigit(c))
+    {
+        std::string value = "";
+        value += c;
+
+        // check if the next character is a digit
+        for (int j = pos + 1; j < m_source.length(); j++)
+        {
+            if (isdigit(m_source[j]))
+            {
+                value += m_source[j];
+                pos++;
+            }
+            else
+            {
                 break;
             }
         }
 
-        // check if the character is a digit
-        if (isdigit(c))
-        {
-            std::string value = "";
-            value += c;
+        m_tokens->push_back(new Token(Token::INT, value));
 
-            // check if the next character is a digit
-            for (int j = i + 1; j < m_source.length(); j++)
+        return true;
+    }
+
+    return false;
+}
+
+bool Tokenizer::comment()
+{
+    char c = m_source[pos];
+    // check if comment
+    if (c == '/')
+    {
+        if (m_source[pos + 1] == '/')
+        {
+            // comment
+            std::string comment = "//";
+
+            // get the rest of the comment
+            for (int j = pos + 2; j < m_source.length(); j++)
             {
-                if (isdigit(m_source[j]))
-                {
-                    value += m_source[j];
-                    i++;
-                }
-                else
+                if (m_source[j] == '\r' || m_source[j] == '\n')
                 {
                     break;
                 }
+
+                comment += m_source[j];
             }
 
-            m_tokens->push_back(new Token(Token::INT, value));
+            m_tokens->push_back(new Token(Token::COMMENT, comment));
+
+            // skip the rest of the comment
+            pos += comment.length() - 1;
+            return true;
         }
     }
 
-    // add EOF token
-    m_tokens->push_back(new Token(Token::_EOF, "EOF"));
+    return false;
 }
 
 void Tokenizer::reset()

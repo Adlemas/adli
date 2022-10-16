@@ -32,6 +32,7 @@ typedef struct _Token Token;
 class Tokenizer
 {
     std::string m_source;
+    unsigned int pos;
 
     // tokens
     std::vector<Token *> *m_tokens;
@@ -39,6 +40,20 @@ class Tokenizer
     int m_index = 0;
 
     void init();
+
+    // Using bool to determine if we should continue
+
+    // Comment
+    bool comment();
+
+    // Digit
+    bool digit();
+
+    // Token
+    bool token();
+
+    // EOF
+    bool eof();
 
 public:
     Tokenizer(const std::string &source);
