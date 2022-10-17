@@ -28,5 +28,5 @@ COMMENT: '//' ~[\r
 prog: (expr SEMICOLON)*;
 expr: expr OP expr | INT | PAREN_OPEN+ expr+ PAREN_CLOSE;
 
-// Statements
-
+// Variables
+var: ID '=' expr SEMICOLON;
