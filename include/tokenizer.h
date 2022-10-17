@@ -29,6 +29,22 @@ struct _Token
 };
 typedef struct _Token Token;
 
+// Char string for each token type
+static const char *TOKEN_TYPE_STRINGS[] = {
+    "PLUS",
+    "MINUS",
+    "MULTIPLY",
+    "DIVIDE",
+    "MODULO",
+    "SEMICOLON",
+    "COMMENT",
+    "PAREN_OPEN",
+    "PAREN_CLOSE",
+    "INT",
+    "WHITESPACE",
+    "_EOF",
+};
+
 class Tokenizer
 {
     std::string m_source;

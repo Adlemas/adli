@@ -28,7 +28,7 @@ void print_node(ast::nodes::Node *node, int tabulation)
     {
         BinaryNode *binary = (BinaryNode *)node;
 
-        std::cout << std::string(tabulation, ' ') << "BinaryNode: " << binary->op() << std::endl;
+        std::cout << std::string(tabulation, ' ') << "BinaryNode: " << OPERATOR_STRINGS[binary->op()] << std::endl;
 
         print_node(binary->left(), tabulation + TABULATION_SIZE);
         print_node(binary->right(), tabulation + TABULATION_SIZE);
@@ -37,7 +37,7 @@ void print_node(ast::nodes::Node *node, int tabulation)
     {
         LiteralNode *literal = (LiteralNode *)node;
 
-        std::cout << std::string(tabulation, ' ') << "LiteralNode: " << literal->literal_type() << std::endl;
+        std::cout << std::string(tabulation, ' ') << "LiteralNode: " << LITERAL_TYPE_STRINGS[literal->literal_type()] << std::endl;
 
         if (literal->literal_type() == LiteralType::INT)
         {
@@ -56,7 +56,7 @@ void print_node(ast::nodes::Node *node, int tabulation)
 
         if (literal->literal_type() == LiteralType::BOOL)
         {
-            std::cout << std::string(tabulation + TABULATION_SIZE, ' ') << "Value: " << *(bool *)literal->value() << std::endl;
+            std::cout << std::string(tabulation + TABULATION_SIZE, ' ') << "Value: " << ((*(bool *)literal->value() == true) ? "true" : "false") << std::endl;
         }
 
         if (literal->literal_type() == LiteralType::UNDEFINED)

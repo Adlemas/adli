@@ -18,6 +18,15 @@ namespace ast
         };
         typedef enum _LiteralType LiteralType;
 
+        // Char string for each literal type
+        static const char *LITERAL_TYPE_STRINGS[] = {
+            "UNDEFINED",
+            "INT",
+            "FLOAT",
+            "STRING",
+            "BOOL",
+        };
+
         enum _NodeType
         {
             BINARY,
@@ -31,6 +40,18 @@ namespace ast
             STATEMENT,
         };
         typedef enum _NodeType NodeType;
+
+        // Char string for each node type
+        static const char *NODE_TYPE_STRINGS[] = {
+            "BINARY",
+            "UNARY",
+            "LITERAL",
+            "VARIABLE_DECLARATION",
+            "VARIABLE_ASSIGNMENT",
+            "VARIABLE",
+            "STATEMENTS",
+            "STATEMENT",
+        };
 
         class Node
         {
@@ -67,6 +88,16 @@ namespace ast
             MODULO,
         };
         typedef enum _Operator Operator;
+
+        // Char string for each operator
+        static const char *OPERATOR_STRINGS[] = {
+            "NONE",
+            "PLUS",
+            "MINUS",
+            "MULTIPLY",
+            "DIVIDE",
+            "MODULO",
+        };
 
         class BinaryNode : public Node
         {
