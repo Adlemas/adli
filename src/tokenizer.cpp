@@ -11,6 +11,8 @@ static const Token TOKENS[] = {
     Token(Token::PAREN_OPEN, "("),
     Token(Token::PAREN_CLOSE, ")"),
     Token(Token::SEMICOLON, ";"),
+    Token(Token::QUESTION, "?"),
+    Token(Token::COLON, ":"),
     Token(Token::WHITESPACE, " "),
     Token(Token::WHITESPACE, "\t"),
     Token(Token::WHITESPACE, "\r"),
@@ -53,6 +55,19 @@ Token *Tokenizer::next_token()
     Token *token = m_tokens->at(m_index);
 
     m_index++;
+
+    return token;
+}
+
+Token *Tokenizer::peek_token()
+{
+    if (m_index + 1 >= m_tokens->size())
+    {
+        // end of tokens
+        return new Token(Token::_EOF, "");
+    }
+
+    Token *token = m_tokens->at(m_index + 1);
 
     return token;
 }

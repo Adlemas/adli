@@ -35,6 +35,7 @@ namespace ast
             VARIABLE_DECLARATION,
             VARIABLE_ASSIGNMENT,
             VARIABLE,
+            TERNARY,
             STATEMENTS,
             // TODO: Implement statement node type
             STATEMENT,
@@ -49,6 +50,7 @@ namespace ast
             "VARIABLE_DECLARATION",
             "VARIABLE_ASSIGNMENT",
             "VARIABLE",
+            "TERNARY",
             "STATEMENTS",
             "STATEMENT",
         };
@@ -120,6 +122,43 @@ namespace ast
             void setOp(Operator op);
         };
 
+        class UnaryNode : public Node
+        {
+            Node *m_node;
+            Operator m_operator;
+
+        public:
+            UnaryNode(Node *node);
+            UnaryNode(Node *node, Operator op);
+            ~UnaryNode();
+
+            Node *node();
+            Operator op();
+
+            void setNode(Node *node);
+            void setOp(Operator op);
+        };
+
+        // Ternalary node
+        class TernaryNode : public Node
+        {
+            Node *m_left;
+            Node *m_middle;
+            Node *m_right;
+
+        public:
+            TernaryNode(Node *left, Node *middle, Node *right);
+            ~TernaryNode();
+
+            Node *left();
+            Node *middle();
+            Node *right();
+
+            void setLeft(Node *left);
+            void setMiddle(Node *middle);
+            void setRight(Node *right);
+        };
+
         class StatementsNode : public Node
         {
             std::vector<Node *> *m_statements;
@@ -151,6 +190,8 @@ namespace ast
         void error(const char *msg);
 
         void eat(Token::Type type);
+
+        Token::Type peek();
 
         nodes::Node *factor();
 

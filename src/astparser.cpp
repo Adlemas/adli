@@ -142,6 +142,90 @@ namespace ast
         {
             return m_statements->size();
         }
+
+        TernaryNode::TernaryNode(Node *left, Node *middle, Node *right)
+            : Node(TERNARY)
+        {
+            m_left = left;
+            m_middle = middle;
+            m_right = right;
+        }
+
+        TernaryNode::~TernaryNode()
+        {
+            delete m_left;
+            delete m_middle;
+            delete m_right;
+        }
+
+        Node *TernaryNode::left()
+        {
+            return m_left;
+        }
+
+        Node *TernaryNode::middle()
+        {
+            return m_middle;
+        }
+
+        Node *TernaryNode::right()
+        {
+            return m_right;
+        }
+
+        void TernaryNode::setLeft(Node *left)
+        {
+            m_left = left;
+        }
+
+        void TernaryNode::setMiddle(Node *middle)
+        {
+            m_middle = middle;
+        }
+
+        void TernaryNode::setRight(Node *right)
+        {
+            m_right = right;
+        }
+
+        UnaryNode::UnaryNode(Node *node)
+            : Node(UNARY)
+        {
+            m_node = node;
+            m_operator = NONE;
+        }
+
+        UnaryNode::UnaryNode(Node *node, Operator op)
+            : Node(UNARY)
+        {
+            m_node = node;
+            m_operator = op;
+        }
+
+        UnaryNode::~UnaryNode()
+        {
+            delete m_node;
+        }
+
+        Node *UnaryNode::node()
+        {
+            return m_node;
+        }
+
+        Operator UnaryNode::op()
+        {
+            return m_operator;
+        }
+
+        void UnaryNode::setNode(Node *node)
+        {
+            m_node = node;
+        }
+
+        void UnaryNode::setOp(Operator op)
+        {
+            m_operator = op;
+        }
     } // namespace nodes
 
     // Parser class implementation
@@ -163,8 +247,13 @@ namespace ast
         }
         else
         {
-            error(std::string("Expected token type " + std::to_string(type) + " but got " + std::to_string(m_current_token->type)).c_str());
+            error(std::string("Expected token type " + std::string(TOKEN_TYPE_STRINGS[type]) + " but got " + std::string(TOKEN_TYPE_STRINGS[m_current_token->type])).c_str());
         }
+    }
+
+    Token::Type Parser::peek()
+    {
+        return m_tokenizer->peek_token()->type;
     }
 
     nodes::Node *Parser::factor()
@@ -185,6 +274,21 @@ namespace ast
             nodes::Node *result = expr();
             eat(Token::PAREN_CLOSE);
             return result;
+        }
+        // Unary operator
+        // -factor
+        else if (token->type == Token::MINUS)
+        {
+            eat(Token::MINUS);
+            nodes::Node *right = factor();
+            return new nodes::UnaryNode(right, nodes::Operator::MINUS);
+        }
+        // +factor
+        else if (token->type == Token::PLUS)
+        {
+            eat(Token::PLUS);
+            nodes::Node *right = factor();
+            return new nodes::UnaryNode(right, nodes::Operator::PLUS);
         }
         else
         {
@@ -248,7 +352,7 @@ namespace ast
         nodes::Node *result = term();
         nodes::BinaryNode *node = new nodes::BinaryNode(result, 0);
 
-        while (m_current_token->type == Token::PLUS || m_current_token->type == Token::MINUS)
+        while (m_current_token->type == Token::PLUS || m_current_token->type == Token::MINUS || m_current_token->type == Token::QUESTION)
         {
             Token *token = m_current_token;
 
@@ -271,6 +375,16 @@ namespace ast
 
                 result = node;
                 node = new nodes::BinaryNode(result, 0);
+            }
+            // QUESTION - ternary operator
+            else if (token->type == Token::QUESTION)
+            {
+                eat(Token::QUESTION);
+                nodes::Node *middle = expr();
+                eat(Token::COLON);
+                nodes::Node *right = expr();
+
+                result = new nodes::TernaryNode(result, middle, right);
             }
             else
             {

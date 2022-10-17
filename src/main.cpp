@@ -5,6 +5,8 @@
 
 #include <astdebug.h>
 
+#define TOKEN_NAME_MAX_LENGTH 20
+
 void parse_tokenizer(Tokenizer &tokenizer)
 {
     using namespace ast;
@@ -12,6 +14,11 @@ void parse_tokenizer(Tokenizer &tokenizer)
     Parser parser(&tokenizer);
 
     nodes::StatementsNode *result = parser.parse();
+
+    std::cout << std::endl
+              << "Parsed successfully!" << std::endl;
+    std::cout << "Statements: " << result->size() << std::endl
+              << std::endl;
 
     print_nodes(result);
 }
@@ -22,7 +29,7 @@ void print_tokens(Tokenizer &tokenizer)
 
     while (token->type != Token::_EOF)
     {
-        std::cout << "Token " << token->type << ": " << token->value << std::endl;
+        std::cout << "(" << TOKEN_TYPE_STRINGS[token->type] << "):" << std::string(TOKEN_NAME_MAX_LENGTH - strlen(TOKEN_TYPE_STRINGS[token->type]), ' ') << "\t" << '"' << token->value << '"' << std::endl;
         token = tokenizer.next_token();
     }
 }

@@ -81,4 +81,12 @@ void print_node(ast::nodes::Node *node, int tabulation)
             node = statements->current();
         }
     }
+    else if (node->type() == NodeType::TERNARY)
+    {
+        UnaryNode *unary = (UnaryNode *)node;
+
+        std::cout << std::string(tabulation, ' ') << "UnaryNode: " << (unary->op() == Operator::MINUS ? '-' : '+') << std::endl;
+
+        print_node(unary->node(), tabulation + TABULATION_SIZE);
+    }
 }

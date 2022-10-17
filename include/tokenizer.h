@@ -19,6 +19,8 @@ struct _Token
         PAREN_CLOSE,
         INT,
         WHITESPACE,
+        QUESTION,
+        COLON,
         _EOF,
     };
 
@@ -42,6 +44,8 @@ static const char *TOKEN_TYPE_STRINGS[] = {
     "PAREN_CLOSE",
     "INT",
     "WHITESPACE",
+    "QUESTION",
+    "COLON",
     "_EOF",
 };
 
@@ -79,6 +83,7 @@ public:
     void tokenize();
     void reset();
     Token *next_token();
+    Token *peek_token();
 };
 
 #endif
