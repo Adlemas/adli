@@ -117,7 +117,7 @@ namespace ast
 
         void init();
 
-        void error();
+        void error(const char *msg);
 
         void eat(Token::Type type);
 
