@@ -16,17 +16,13 @@ void parse_tokenizer(Tokenizer &tokenizer)
     print_nodes(result);
 }
 
-void parse_statements_node(ast::nodes::StatementsNode *statements)
-{
-}
-
 void print_tokens(Tokenizer &tokenizer)
 {
     Token *token = tokenizer.next_token();
 
     while (token->type != Token::_EOF)
     {
-        std::cout << "Token: " << token->value << std::endl;
+        std::cout << "Token " << token->type << ": " << token->value << std::endl;
         token = tokenizer.next_token();
     }
 }
