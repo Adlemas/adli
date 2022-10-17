@@ -1,5 +1,6 @@
 
 #include <astparser.h>
+#include <iostream>
 
 namespace ast
 {
@@ -149,9 +150,9 @@ namespace ast
         m_current_token = m_tokenizer->next_token();
     }
 
-    void Parser::error()
+    void Parser::error(const char *msg)
     {
-        throw "Error parsing input";
+        std::cout << "ParseError: " << msg << std::endl;
     }
 
     void Parser::eat(Token::Type type)
@@ -162,7 +163,7 @@ namespace ast
         }
         else
         {
-            error();
+            error(std::string("Expected token type " + std::to_string(type) + " but got " + std::to_string(m_current_token->type)).c_str());
         }
     }
 
@@ -185,6 +186,11 @@ namespace ast
             eat(Token::PAREN_CLOSE);
             return result;
         }
+        else
+        {
+            error(std::string("Unexpected token \"" + token->value + "\"").c_str());
+            return NULL;
+        }
 
         return 0;
     }
@@ -206,6 +212,7 @@ namespace ast
                 node->setOp(nodes::Operator::MULTIPLY);
 
                 result = node;
+                node = new nodes::BinaryNode(result, 0);
             }
             else if (token->type == Token::DIVIDE)
             {
@@ -215,6 +222,7 @@ namespace ast
                 node->setOp(nodes::Operator::DIVIDE);
 
                 result = node;
+                node = new nodes::BinaryNode(result, 0);
             }
             else if (token->type == Token::MODULO)
             {
@@ -224,6 +232,11 @@ namespace ast
                 node->setOp(nodes::Operator::MODULO);
 
                 result = node;
+                node = new nodes::BinaryNode(result, 0);
+            }
+            else
+            {
+                error(std::string("Unexpected token \"" + token->value + "\"").c_str());
             }
         }
 
@@ -247,6 +260,7 @@ namespace ast
                 node->setOp(nodes::Operator::PLUS);
 
                 result = node;
+                node = new nodes::BinaryNode(result, 0);
             }
             else if (token->type == Token::MINUS)
             {
@@ -256,6 +270,11 @@ namespace ast
                 node->setOp(nodes::Operator::MINUS);
 
                 result = node;
+                node = new nodes::BinaryNode(result, 0);
+            }
+            else
+            {
+                error(std::string("Unexpected token \"" + token->value + "\"").c_str());
             }
         }
 
