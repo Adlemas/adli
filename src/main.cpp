@@ -29,7 +29,7 @@ void print_tokens(Tokenizer &tokenizer)
 
     while (token->type != Token::_EOF)
     {
-        std::cout << "(" << TOKEN_TYPE_STRINGS[token->type] << "):" << std::string(TOKEN_NAME_MAX_LENGTH - strlen(TOKEN_TYPE_STRINGS[token->type]), ' ') << "\t" << '"' << token->value << '"' << std::endl;
+        std::cout << "Token(" << TOKEN_TYPE_STRINGS[token->type] << "):" << std::string(TOKEN_NAME_MAX_LENGTH - strlen(TOKEN_TYPE_STRINGS[token->type]), ' ') << "\t" << '"' << token->value << '"' << std::endl;
         token = tokenizer.next_token();
     }
 }
@@ -48,11 +48,6 @@ int main()
 
     Tokenizer tokenizer(source);
     tokenizer.tokenize();
-
-    // print tokens
-    print_tokens(tokenizer);
-
-    tokenizer.reset();
 
     // parse tokens
     parse_tokenizer(tokenizer);
