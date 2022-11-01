@@ -4,6 +4,7 @@
 #include <filereader.h>
 
 #include <astdebug.h>
+#include <cstring>
 
 #define TOKEN_NAME_MAX_LENGTH 20
 
