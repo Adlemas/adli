@@ -2,344 +2,276 @@
 #include <astparser.h>
 #include <iostream>
 
-namespace ast
-{
+namespace ast {
 
-    namespace nodes
-    {
-        Node::Node(NodeType type)
-        {
+    namespace nodes {
+        Node::Node(NodeType type) {
             m_type = type;
         }
 
-        Node::~Node()
-        {
-        }
+        Node::~Node() = default;
 
-        NodeType Node::type()
-        {
+        NodeType Node::type() {
             return m_type;
         }
 
-        LiteralNode::LiteralNode(LiteralType type, void *value) : Node(LITERAL)
-        {
+        LiteralNode::LiteralNode(LiteralType type, void *value) : Node(LITERAL) {
             m_type = type;
             m_value = value;
         }
 
-        LiteralType LiteralNode::literal_type()
-        {
+        LiteralType LiteralNode::literal_type() {
             return m_type;
         }
 
-        LiteralNode::~LiteralNode()
-        {
-        }
+        LiteralNode::~LiteralNode() = default;
 
-        void *LiteralNode::value()
-        {
+        void *LiteralNode::value() {
             return m_value;
         }
 
         BinaryNode::BinaryNode(Node *left, Node *right)
-            : Node(BINARY)
-        {
+                : Node(BINARY) {
             m_left = left;
             m_right = right;
             m_operator = NONE;
         }
 
         BinaryNode::BinaryNode(Node *left, Node *right, Operator op)
-            : Node(BINARY)
-        {
+                : Node(BINARY) {
             m_left = left;
             m_right = right;
             m_operator = op;
         }
 
-        BinaryNode::~BinaryNode()
-        {
+        BinaryNode::~BinaryNode() {
             delete m_left;
             delete m_right;
         }
 
-        Node *BinaryNode::left()
-        {
+        Node *BinaryNode::left() {
             return m_left;
         }
 
-        Node *BinaryNode::right()
-        {
+        Node *BinaryNode::right() {
             return m_right;
         }
 
-        Operator BinaryNode::op()
-        {
+        Operator BinaryNode::op() {
             return m_operator;
         }
 
-        void BinaryNode::setLeft(Node *left)
-        {
+        void BinaryNode::setLeft(Node *left) {
             m_left = left;
         }
 
-        void BinaryNode::setRight(Node *right)
-        {
+        void BinaryNode::setRight(Node *right) {
             m_right = right;
         }
 
-        void BinaryNode::setOp(Operator op)
-        {
+        void BinaryNode::setOp(Operator op) {
             m_operator = op;
         }
 
         StatementsNode::StatementsNode()
-            : Node(STATEMENTS)
-        {
+                : Node(STATEMENTS) {
             m_statements = new std::vector<Node *>();
         }
 
-        StatementsNode::~StatementsNode()
-        {
-            for (auto it = m_statements->begin(); it != m_statements->end(); it++)
-            {
-                delete *it;
+        StatementsNode::~StatementsNode() {
+            for (auto &m_statement: *m_statements) {
+                delete m_statement;
             }
         }
 
-        void StatementsNode::addStatement(Node *statement)
-        {
+        void StatementsNode::addStatement(Node *statement) {
             m_statements->push_back(statement);
         }
 
-        std::vector<Node *> *StatementsNode::statements()
-        {
+        std::vector<Node *> *StatementsNode::statements() {
             return m_statements;
         }
 
-        void StatementsNode::next()
-        {
+        void StatementsNode::next() {
             m_index++;
         }
 
-        void StatementsNode::reset()
-        {
+        void StatementsNode::reset() {
             m_index = 0;
             next();
         }
 
-        Node *StatementsNode::current()
-        {
-            if (m_index >= m_statements->size())
-            {
-                return NULL;
+        Node *StatementsNode::current() {
+            if (m_index >= m_statements->size()) {
+                return nullptr;
             }
 
             return m_statements->at(m_index);
         }
 
-        unsigned long int StatementsNode::size()
-        {
+        unsigned long int StatementsNode::size() {
             return m_statements->size();
         }
 
         TernaryNode::TernaryNode(Node *left, Node *middle, Node *right)
-            : Node(TERNARY)
-        {
+                : Node(TERNARY) {
             m_left = left;
             m_middle = middle;
             m_right = right;
         }
 
-        TernaryNode::~TernaryNode()
-        {
+        TernaryNode::~TernaryNode() {
             delete m_left;
             delete m_middle;
             delete m_right;
         }
 
-        Node *TernaryNode::left()
-        {
+        Node *TernaryNode::left() {
             return m_left;
         }
 
-        Node *TernaryNode::middle()
-        {
+        Node *TernaryNode::middle() {
             return m_middle;
         }
 
-        Node *TernaryNode::right()
-        {
+        Node *TernaryNode::right() {
             return m_right;
         }
 
-        void TernaryNode::setLeft(Node *left)
-        {
+        void TernaryNode::setLeft(Node *left) {
             m_left = left;
         }
 
-        void TernaryNode::setMiddle(Node *middle)
-        {
+        void TernaryNode::setMiddle(Node *middle) {
             m_middle = middle;
         }
 
-        void TernaryNode::setRight(Node *right)
-        {
+        void TernaryNode::setRight(Node *right) {
             m_right = right;
         }
 
         UnaryNode::UnaryNode(Node *node)
-            : Node(UNARY)
-        {
+                : Node(UNARY) {
             m_node = node;
             m_operator = NONE;
         }
 
         UnaryNode::UnaryNode(Node *node, Operator op)
-            : Node(UNARY)
-        {
+                : Node(UNARY) {
             m_node = node;
             m_operator = op;
         }
 
-        UnaryNode::~UnaryNode()
-        {
+        UnaryNode::~UnaryNode() {
             delete m_node;
         }
 
-        Node *UnaryNode::node()
-        {
+        Node *UnaryNode::node() {
             return m_node;
         }
 
-        Operator UnaryNode::op()
-        {
+        Operator UnaryNode::op() {
             return m_operator;
         }
 
-        void UnaryNode::setNode(Node *node)
-        {
+        void UnaryNode::setNode(Node *node) {
             m_node = node;
         }
 
-        void UnaryNode::setOp(Operator op)
-        {
+        void UnaryNode::setOp(Operator op) {
             m_operator = op;
         }
     } // namespace nodes
 
     // Parser class implementation
-    void Parser::init()
-    {
+    void Parser::init() {
         m_current_token = m_tokenizer->next_token();
     }
 
-    void Parser::error(const char *msg)
-    {
+    void Parser::error(const char *msg) {
         std::cout << "ParseError: " << msg << std::endl;
+        exit(-1);
     }
 
-    void Parser::eat(Token::Type type)
-    {
-        if (m_current_token->type == type)
-        {
+    void Parser::eat(Token::Type type) {
+        if (m_current_token->type == type) {
             m_current_token = m_tokenizer->next_token();
-        }
-        else
-        {
-            error(std::string("Expected token type " + std::string(TOKEN_TYPE_STRINGS[type]) + " but got " + std::string(TOKEN_TYPE_STRINGS[m_current_token->type])).c_str());
+        } else {
+            error(std::string("Expected token type " + std::string(TOKEN_TYPE_STRINGS[type]) + " but got " +
+                              std::string(TOKEN_TYPE_STRINGS[m_current_token->type])).c_str());
         }
     }
 
-    Token::Type Parser::peek()
-    {
+    Token::Type Parser::peek() {
         return m_tokenizer->peek_token()->type;
     }
 
-    nodes::Node *Parser::factor()
-    {
+    nodes::Node *Parser::factor() {
         Token *token = m_current_token;
 
-        if (token->type == Token::INT)
-        {
+        if (token->type == Token::INT) {
             eat(Token::INT);
 
             int *value = new int(std::stoi(token->value));
 
             return new nodes::LiteralNode(nodes::INT, value);
-        }
-        else if (token->type == Token::PAREN_OPEN)
-        {
+        } else if (token->type == Token::PAREN_OPEN) {
             eat(Token::PAREN_OPEN);
             nodes::Node *result = expr();
             eat(Token::PAREN_CLOSE);
             return result;
         }
-        // Unary operator
-        // -factor
-        else if (token->type == Token::MINUS)
-        {
+            // Unary operator
+            // -factor
+        else if (token->type == Token::MINUS) {
             eat(Token::MINUS);
             nodes::Node *right = factor();
             return new nodes::UnaryNode(right, nodes::Operator::MINUS);
         }
-        // +factor
-        else if (token->type == Token::PLUS)
-        {
+            // +factor
+        else if (token->type == Token::PLUS) {
             eat(Token::PLUS);
             nodes::Node *right = factor();
             return new nodes::UnaryNode(right, nodes::Operator::PLUS);
-        }
-        else
-        {
+        } else {
             error(std::string("Unexpected token \"" + token->value + "\"").c_str());
-            return NULL;
+            return nullptr;
         }
-
-        return 0;
     }
 
-    nodes::Node *Parser::term()
-    {
+    nodes::Node *Parser::term() {
         nodes::Node *result = factor();
-        nodes::BinaryNode *node = new nodes::BinaryNode(result, 0);
+        auto *node = new nodes::BinaryNode(result, nullptr);
 
-        while (m_current_token->type == Token::MULTIPLY || m_current_token->type == Token::DIVIDE || m_current_token->type == Token::MODULO)
-        {
+        while (m_current_token->type == Token::MULTIPLY || m_current_token->type == Token::DIVIDE ||
+               m_current_token->type == Token::MODULO) {
             Token *token = m_current_token;
 
-            if (token->type == Token::MULTIPLY)
-            {
+            if (token->type == Token::MULTIPLY) {
                 eat(Token::MULTIPLY);
                 nodes::Node *right = factor();
                 node->setRight(right);
                 node->setOp(nodes::Operator::MULTIPLY);
 
                 result = node;
-                node = new nodes::BinaryNode(result, 0);
-            }
-            else if (token->type == Token::DIVIDE)
-            {
+                node = new nodes::BinaryNode(result, nullptr);
+            } else if (token->type == Token::DIVIDE) {
                 eat(Token::DIVIDE);
                 nodes::Node *right = factor();
                 node->setRight(right);
                 node->setOp(nodes::Operator::DIVIDE);
 
                 result = node;
-                node = new nodes::BinaryNode(result, 0);
-            }
-            else if (token->type == Token::MODULO)
-            {
+                node = new nodes::BinaryNode(result, nullptr);
+            } else if (token->type == Token::MODULO) {
                 eat(Token::MODULO);
                 nodes::Node *right = factor();
                 node->setRight(right);
                 node->setOp(nodes::Operator::MODULO);
 
                 result = node;
-                node = new nodes::BinaryNode(result, 0);
-            }
-            else
-            {
+                node = new nodes::BinaryNode(result, nullptr);
+            } else {
                 error(std::string("Unexpected token \"" + token->value + "\"").c_str());
             }
         }
@@ -347,47 +279,40 @@ namespace ast
         return result;
     }
 
-    nodes::Node *Parser::expr()
-    {
+    nodes::Node *Parser::expr() {
         nodes::Node *result = term();
-        nodes::BinaryNode *node = new nodes::BinaryNode(result, 0);
+        auto *node = new nodes::BinaryNode(result, nullptr);
 
-        while (m_current_token->type == Token::PLUS || m_current_token->type == Token::MINUS || m_current_token->type == Token::QUESTION)
-        {
+        while (m_current_token->type == Token::PLUS || m_current_token->type == Token::MINUS ||
+               m_current_token->type == Token::QUESTION) {
             Token *token = m_current_token;
 
-            if (token->type == Token::PLUS)
-            {
+            if (token->type == Token::PLUS) {
                 eat(Token::PLUS);
                 nodes::Node *right = term();
                 node->setRight(right);
                 node->setOp(nodes::Operator::PLUS);
 
                 result = node;
-                node = new nodes::BinaryNode(result, 0);
-            }
-            else if (token->type == Token::MINUS)
-            {
+                node = new nodes::BinaryNode(result, nullptr);
+            } else if (token->type == Token::MINUS) {
                 eat(Token::MINUS);
                 nodes::Node *right = term();
                 node->setRight(right);
                 node->setOp(nodes::Operator::MINUS);
 
                 result = node;
-                node = new nodes::BinaryNode(result, 0);
+                node = new nodes::BinaryNode(result, nullptr);
             }
-            // QUESTION - ternary operator
-            else if (token->type == Token::QUESTION)
-            {
+                // QUESTION - ternary operator
+            else if (token->type == Token::QUESTION) {
                 eat(Token::QUESTION);
                 nodes::Node *middle = expr();
                 eat(Token::COLON);
                 nodes::Node *right = expr();
 
                 result = new nodes::TernaryNode(result, middle, right);
-            }
-            else
-            {
+            } else {
                 error(std::string("Unexpected token \"" + token->value + "\"").c_str());
             }
         }
@@ -395,25 +320,20 @@ namespace ast
         return result;
     }
 
-    Parser::Parser(Tokenizer *tokenizer)
-    {
+    Parser::Parser(Tokenizer *tokenizer) {
         m_tokenizer = tokenizer;
+        m_current_token = nullptr;
         init();
     }
 
-    Parser::~Parser()
-    {
-    }
+    Parser::~Parser() = default;
 
-    nodes::StatementsNode *Parser::prog()
-    {
-        nodes::StatementsNode *statements = new nodes::StatementsNode();
+    nodes::StatementsNode *Parser::prog() {
+        auto *statements = new nodes::StatementsNode();
 
-        while (m_current_token->type != Token::_EOF)
-        {
+        while (m_current_token->type != Token::_EOF) {
             // Comment
-            if (m_current_token->type == Token::COMMENT)
-            {
+            if (m_current_token->type == Token::COMMENT) {
                 eat(Token::COMMENT);
                 continue;
             }
@@ -424,8 +344,7 @@ namespace ast
         return statements;
     }
 
-    nodes::StatementsNode *Parser::parse()
-    {
+    nodes::StatementsNode *Parser::parse() {
         return prog();
     }
 }
