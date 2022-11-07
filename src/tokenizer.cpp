@@ -1,6 +1,6 @@
 #include <tokenizer.h>
-#include <iostream>
-#include <ctype.h>
+#include <cctype>
+#include <utility>
 
 static const Token TOKENS[] = {
     Token(Token::PLUS, "+"),
@@ -19,18 +19,15 @@ static const Token TOKENS[] = {
     Token(Token::WHITESPACE, "\n"),
 };
 
-Tokenizer::Tokenizer(const std::string &source) : m_source(source)
+Tokenizer::Tokenizer(std::string source) : m_source(std::move(source))
 {
-    init();
+    pos = 0;
+    m_tokens = new std::vector<Token *>();
 }
 
 Tokenizer::Tokenizer(const char *source) : m_source(source)
 {
-    init();
-}
-
-void Tokenizer::init()
-{
+    pos = 0;
     m_tokens = new std::vector<Token *>();
 }
 
@@ -81,8 +78,6 @@ void Tokenizer::tokenize()
 {
     for (pos = 0; pos < m_source.length(); pos++)
     {
-        char c = m_source[pos];
-
         // comments
         if (comment())
         {
@@ -109,16 +104,16 @@ bool Tokenizer::token()
     char c = m_source[pos];
 
     // check if the character is a token
-    for (int j = 0; j < sizeof(TOKENS) / sizeof(Token); j++)
+    for (const auto & j : TOKENS)
     {
-        if (c == TOKENS[j].value[0])
+        if (c == j.value[0])
         {
             // do not add whitespace tokens apart from the newline token
-            if (TOKENS[j].type == Token::WHITESPACE)
+            if (j.type == Token::WHITESPACE)
             {
                 break;
             }
-            m_tokens->push_back(new Token(TOKENS[j].type, TOKENS[j].value));
+            m_tokens->push_back(new Token(j.type, j.value));
             break;
         }
     }
@@ -141,11 +136,11 @@ bool Tokenizer::digit()
     // check if the character is a digit
     if (isdigit(c))
     {
-        std::string value = "";
+        std::string value;
         value += c;
 
         // check if the next character is a digit
-        for (int j = pos + 1; j < m_source.length(); j++)
+        for (int j = (int)pos + 1; j < m_source.length(); j++)
         {
             if (isdigit(m_source[j]))
             {
@@ -178,7 +173,7 @@ bool Tokenizer::comment()
             std::string comment = "//";
 
             // get the rest of the comment
-            for (int j = pos + 2; j < m_source.length(); j++)
+            for (int j = (int)pos + 2; j < m_source.length(); j++)
             {
                 if (m_source[j] == '\r' || m_source[j] == '\n')
                 {

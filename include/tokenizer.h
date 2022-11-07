@@ -76,7 +76,7 @@ class Tokenizer
     bool eof();
 
 public:
-    Tokenizer(const std::string &source);
+    Tokenizer(std::string source);
     Tokenizer(const char *source);
     ~Tokenizer();
 
