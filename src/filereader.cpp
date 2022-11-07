@@ -28,4 +28,4 @@ std::string FileReader::read()
     }
 
     return content;
-};
+}
