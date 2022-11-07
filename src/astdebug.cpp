@@ -6,7 +6,7 @@ void print_nodes(ast::nodes::StatementsNode *node)
     using namespace ast::nodes;
     Node *n = node->current();
 
-    while (n != nullptr || n != NULL)
+    while (n != nullptr)
     {
         print_node(n, 0);
 
@@ -19,14 +19,14 @@ void print_node(ast::nodes::Node *node, int tabulation)
 {
     using namespace ast::nodes;
 
-    if (node == nullptr || node == NULL)
+    if (node == nullptr)
     {
         return;
     }
 
     if (node->type() == NodeType::BINARY)
     {
-        BinaryNode *binary = (BinaryNode *)node;
+        auto *binary = (BinaryNode *)node;
 
         std::cout << std::string(tabulation, ' ') << "BinaryNode: " << OPERATOR_STRINGS[binary->op()] << std::endl;
 
@@ -35,7 +35,7 @@ void print_node(ast::nodes::Node *node, int tabulation)
     }
     else if (node->type() == NodeType::LITERAL)
     {
-        LiteralNode *literal = (LiteralNode *)node;
+        auto *literal = (LiteralNode *)node;
 
         std::cout << std::string(tabulation, ' ') << "LiteralNode: " << LITERAL_TYPE_STRINGS[literal->literal_type()] << std::endl;
 
@@ -56,7 +56,8 @@ void print_node(ast::nodes::Node *node, int tabulation)
 
         if (literal->literal_type() == LiteralType::BOOL)
         {
-            std::cout << std::string(tabulation + TABULATION_SIZE, ' ') << "Value: " << ((*(bool *)literal->value() == true) ? "true" : "false") << std::endl;
+            std::cout << std::string(tabulation + TABULATION_SIZE, ' ') << "Value: " << (*(bool *) literal->value()
+                                                                                         ? "true" : "false") << std::endl;
         }
 
         if (literal->literal_type() == LiteralType::UNDEFINED)
@@ -67,23 +68,23 @@ void print_node(ast::nodes::Node *node, int tabulation)
     }
     else if (node->type() == NodeType::STATEMENTS)
     {
-        StatementsNode *statements = (StatementsNode *)node;
+        auto *statements = (StatementsNode *)node;
 
         std::cout << std::string(tabulation, ' ') << "StatementsNode: " << statements->size() << std::endl;
 
-        Node *node = statements->current();
+        Node *pNode = statements->current();
 
-        while (node != nullptr || node != NULL)
+        while (pNode != nullptr)
         {
-            print_node(node, tabulation + TABULATION_SIZE);
+            print_node(pNode, tabulation + TABULATION_SIZE);
 
             statements->next();
-            node = statements->current();
+            pNode = statements->current();
         }
     }
     else if (node->type() == NodeType::TERNARY)
     {
-        UnaryNode *unary = (UnaryNode *)node;
+        auto *unary = (UnaryNode *)node;
 
         std::cout << std::string(tabulation, ' ') << "UnaryNode: " << (unary->op() == Operator::MINUS ? '-' : '+') << std::endl;
 
