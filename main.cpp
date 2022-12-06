@@ -6,6 +6,8 @@
 #include <astdebug.h>
 #include <cstring>
 
+#define DEBUG 1 // set to 0 if PROD mode
+
 #define TOKEN_NAME_MAX_LENGTH 20
 
 void parse_tokenizer(Tokenizer &tokenizer)
@@ -21,7 +23,9 @@ void parse_tokenizer(Tokenizer &tokenizer)
     std::cout << "Statements: " << result->size() << std::endl
               << std::endl;
 
-    print_nodes(result);
+    if (DEBUG) {
+        print_nodes(result);
+    }
 }
 
 void print_tokens(Tokenizer &tokenizer)
