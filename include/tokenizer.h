@@ -62,6 +62,9 @@ class Tokenizer
 
     int m_index = 0;
 
+    // error
+    static void error(const std::string &message);
+
     // Comment
     bool comment();
 

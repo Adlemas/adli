@@ -1,7 +1,7 @@
 #include <tokenizer.h>
 #include <filereader.h>
 
-#define DEBUG 0 // set to 0 if PROD mode
+#define DEBUG 1 // set to 0 if PROD mode
 
 #if DEBUG == 1
 #include <astdebug.h>

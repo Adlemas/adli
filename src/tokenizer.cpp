@@ -1,6 +1,7 @@
 #include <tokenizer.h>
 #include <cctype>
 #include <utility>
+#include <iostream>
 
 static const Token TOKENS[] = {
     Token(Token::PLUS, "+"),
@@ -86,14 +87,20 @@ void Tokenizer::tokenize()
         }
 
         // token
-        // Ignore the return value of token() because we don't care if it
-        // returns true or false. We just want to check if it's a token.
-        token();
+        if (token())
+        {
+            continue;
+        }
 
         // digit
-        // Ignore the return value of digit() because we don't care if it's a
-        // digit or not.
-        digit();
+        if (digit())
+        {
+            continue;
+        }
+
+        // identifier
+        // but for now raise an error
+        error("Invalid character: " + std::string(1, m_source[pos]));
     }
 
     // EOF
@@ -102,6 +109,7 @@ void Tokenizer::tokenize()
 
 bool Tokenizer::token()
 {
+    bool found = false;
     char c = m_source[pos];
 
     // check if the character is a token
@@ -109,6 +117,7 @@ bool Tokenizer::token()
     {
         if (c == j.value[0])
         {
+            found = true;
             // do not add whitespace tokens
             if (j.type == Token::WHITESPACE)
             {
@@ -119,7 +128,7 @@ bool Tokenizer::token()
         }
     }
 
-    return false;
+    return found;
 }
 
 bool Tokenizer::eof()
@@ -199,4 +208,9 @@ bool Tokenizer::comment()
 void Tokenizer::reset()
 {
     m_index = 0;
+}
+
+void Tokenizer::error(const std::string &message) {
+    std::cout << "TokenError: " << message << std::endl;
+    exit(1);
 }
