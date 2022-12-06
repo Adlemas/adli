@@ -2,9 +2,10 @@
 #define TOKENIZER_H
 
 #include <string>
+#include <utility>
 #include <vector>
 
-struct _Token
+struct Token
 {
     enum Type
     {
@@ -21,15 +22,15 @@ struct _Token
         WHITESPACE,
         QUESTION,
         COLON,
-        _EOF,
+        // End of file
+        EOF_,
     };
 
-    _Token(Type type, const std::string &value) : type(type), value(value) {}
+    Token(Type type, std::string value) : type(type), value(std::move(value)) {}
 
     Type type;
     std::string value;
 };
-typedef struct _Token Token;
 
 // Char string for each token type
 static const char *TOKEN_TYPE_STRINGS[] = {
@@ -46,7 +47,7 @@ static const char *TOKEN_TYPE_STRINGS[] = {
     "WHITESPACE",
     "QUESTION",
     "COLON",
-    "_EOF",
+    "EOF_",
 };
 
 class Tokenizer
@@ -58,10 +59,6 @@ class Tokenizer
     std::vector<Token *> *m_tokens;
 
     int m_index = 0;
-
-    void init();
-
-    // Using bool to determine if we should continue
 
     // Comment
     bool comment();
@@ -76,8 +73,8 @@ class Tokenizer
     bool eof();
 
 public:
-    Tokenizer(std::string source);
-    Tokenizer(const char *source);
+    explicit Tokenizer(std::string source);
+    explicit Tokenizer(const char *source);
     ~Tokenizer();
 
     void tokenize();

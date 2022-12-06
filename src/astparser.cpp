@@ -331,7 +331,7 @@ namespace ast {
     nodes::StatementsNode *Parser::prog() {
         auto *statements = new nodes::StatementsNode();
 
-        while (m_current_token->type != Token::_EOF) {
+        while (m_current_token->type != Token::EOF_) {
             // Comment
             if (m_current_token->type == Token::COMMENT) {
                 eat(Token::COMMENT);

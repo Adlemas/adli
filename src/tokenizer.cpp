@@ -46,7 +46,7 @@ Token *Tokenizer::next_token()
     if (m_index >= m_tokens->size())
     {
         // end of tokens
-        return new Token(Token::_EOF, "");
+        return new Token(Token::EOF_, "");
     }
 
     Token *token = m_tokens->at(m_index);
@@ -61,7 +61,7 @@ Token *Tokenizer::peek_token()
     if (m_index + 1 >= m_tokens->size())
     {
         // end of tokens
-        return new Token(Token::_EOF, "");
+        return new Token(Token::EOF_, "");
     }
 
     Token *token = m_tokens->at(m_index + 1);
@@ -108,7 +108,7 @@ bool Tokenizer::token()
     {
         if (c == j.value[0])
         {
-            // do not add whitespace tokens apart from the newline token
+            // do not add whitespace tokens
             if (j.type == Token::WHITESPACE)
             {
                 break;
@@ -124,7 +124,7 @@ bool Tokenizer::token()
 bool Tokenizer::eof()
 {
     // add EOF token
-    m_tokens->push_back(new Token(Token::_EOF, "EOF"));
+    m_tokens->push_back(new Token(Token::EOF_, "EOF"));
 
     return true;
 }
@@ -136,10 +136,11 @@ bool Tokenizer::digit()
     // check if the character is a digit
     if (isdigit(c))
     {
+        // get the whole number
         std::string value;
         value += c;
 
-        // check if the next character is a digit
+        // check if the next character is a digit too
         for (int j = (int)pos + 1; j < m_source.length(); j++)
         {
             if (isdigit(m_source[j]))

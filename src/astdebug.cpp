@@ -20,7 +20,7 @@ void parse_tokenizer(Tokenizer &tokenizer) {
 void print_tokens(Tokenizer &tokenizer) {
     Token *token = tokenizer.next_token();
 
-    while (token->type != Token::_EOF) {
+    while (token->type != Token::EOF_) {
         std::cout << "Token(" << TOKEN_TYPE_STRINGS[token->type] << "):"
                   << std::string(TOKEN_NAME_MAX_LENGTH - strlen(TOKEN_TYPE_STRINGS[token->type]), ' ') << "\t" << '"'
                   << token->value << '"' << std::endl;
