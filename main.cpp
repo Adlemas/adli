@@ -1,8 +1,11 @@
-#include <iostream>
 #include <tokenizer.h>
 #include <filereader.h>
 
+#define DEBUG 0 // set to 0 if PROD mode
+
+#if DEBUG == 1
 #include <astdebug.h>
+#endif
 
 int main()
 {
@@ -18,7 +21,9 @@ int main()
     tokenizer.tokenize();
 
     // parse tokens
+    #if DEBUG == 1
     parse_tokenizer(tokenizer);
+    #endif
 
     return 0;
 }

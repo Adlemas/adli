@@ -9,14 +9,12 @@ void parse_tokenizer(Tokenizer &tokenizer) {
 
     nodes::StatementsNode *result = parser.parse();
 
-    if (DEBUG) {
-        std::cout << std::endl
-                  << "Parsed successfully!" << std::endl;
-        std::cout << "Statements: " << result->size() << std::endl
-                  << std::endl;
+    std::cout << std::endl
+              << "Parsed successfully!" << std::endl;
+    std::cout << "Statements: " << result->size() << std::endl
+              << std::endl;
 
-        print_nodes(result);
-    }
+    print_nodes(result);
 }
 
 void print_tokens(Tokenizer &tokenizer) {

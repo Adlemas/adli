@@ -5,8 +5,6 @@
 
 #define TOKEN_NAME_MAX_LENGTH 20
 
-#define DEBUG 0 // set to 0 if PROD mode
-
 #include <iostream>
 #include <astparser.h>
 
