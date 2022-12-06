@@ -42,6 +42,7 @@ install_manifest.txt
 compile_commands.json
 CTestTestfile.cmake
 _deps
+cmake-build-debug
 
 # Ignore Antlr's build directory
 .antlr
@@ -54,3 +55,6 @@ build-*
 # Ignore vscode folder
 .vscode
 .vs
+
+# Ignore IDE folder
+.idea
