@@ -5,6 +5,8 @@
 namespace ast {
 
     namespace nodes {
+        // Common node class
+
         Node::Node(NodeType type) {
             m_type = type;
         }
@@ -14,6 +16,10 @@ namespace ast {
         NodeType Node::type() {
             return m_type;
         }
+
+        // --- Common node class
+
+        // Literal node class
 
         LiteralNode::LiteralNode(LiteralType type, void *value) : Node(LITERAL) {
             m_type = type;
@@ -29,6 +35,10 @@ namespace ast {
         void *LiteralNode::value() {
             return m_value;
         }
+
+        // --- Literal node class
+
+        // Binary node class
 
         BinaryNode::BinaryNode(Node *left, Node *right)
                 : Node(BINARY) {
@@ -73,6 +83,10 @@ namespace ast {
             m_operator = op;
         }
 
+        // --- Binary node class
+
+        // Statements node class
+
         StatementsNode::StatementsNode()
                 : Node(STATEMENTS) {
             m_statements = new std::vector<Node *>();
@@ -113,6 +127,10 @@ namespace ast {
             return m_statements->size();
         }
 
+        // --- Statements node class
+
+        // Ternary node class
+
         TernaryNode::TernaryNode(Node *left, Node *middle, Node *right)
                 : Node(TERNARY) {
             m_left = left;
@@ -150,6 +168,10 @@ namespace ast {
             m_right = right;
         }
 
+        // --- Ternary node class
+
+        // Unary node class
+
         UnaryNode::UnaryNode(Node *node)
                 : Node(UNARY) {
             m_node = node;
@@ -181,18 +203,29 @@ namespace ast {
         void UnaryNode::setOp(Operator op) {
             m_operator = op;
         }
+
+        // --- Unary node class
     } // namespace nodes
 
     // Parser class implementation
+
+    // Initialize parser
+    // Get first token from tokenizer
     void Parser::init() {
         m_current_token = m_tokenizer->next_token();
     }
 
+    // Error handling
+    // Print error message and exit
     void Parser::error(const char *msg) {
         std::cout << "ParseError: " << msg << std::endl;
         exit(-1);
     }
 
+    // Eat token
+    // If current token is equal to expected token
+    // then get next token from tokenizer
+    // else call error function
     void Parser::eat(Token::Type type) {
         if (m_current_token->type == type) {
             m_current_token = m_tokenizer->next_token();
@@ -202,10 +235,15 @@ namespace ast {
         }
     }
 
+    // Peek token
+    // Get next token's type from tokenizer
+    // without changing current token
     Token::Type Parser::peek() {
         return m_tokenizer->peek_token()->type;
     }
 
+    // Factor
+    // LITERAL | UNARY | PARENTHESIS
     nodes::Node *Parser::factor() {
         Token *token = m_current_token;
 
@@ -222,23 +260,33 @@ namespace ast {
             return result;
         }
             // Unary operator
-            // -factor
+            // -factor | !factor
         else if (token->type == Token::MINUS) {
             eat(Token::MINUS);
             nodes::Node *right = factor();
             return new nodes::UnaryNode(right, nodes::Operator::MINUS);
+        } else if (token->type == Token::NOT) {
+            eat(Token::NOT);
+            nodes::Node *right = factor();
+            return new nodes::UnaryNode(right, nodes::Operator::NOT);
         }
+
             // +factor
         else if (token->type == Token::PLUS) {
             eat(Token::PLUS);
             nodes::Node *right = factor();
             return new nodes::UnaryNode(right, nodes::Operator::PLUS);
+
+        // If token is not a factor
+        // then call error function
         } else {
             error(std::string("Unexpected token \"" + token->value + "\"").c_str());
             return nullptr;
         }
     }
 
+    // Term
+    // factor ((MUL | DIV | MODULO) factor)*
     nodes::Node *Parser::term() {
         nodes::Node *result = factor();
         auto *node = new nodes::BinaryNode(result, nullptr);
@@ -279,6 +327,8 @@ namespace ast {
         return result;
     }
 
+    // Expression
+    // term ((PLUS | MINUS) term)*
     nodes::Node *Parser::expr() {
         nodes::Node *result = term();
         auto *node = new nodes::BinaryNode(result, nullptr);
@@ -320,14 +370,20 @@ namespace ast {
         return result;
     }
 
+    // Constructor
+    // Initialize tokenizer
+    // Call init function
     Parser::Parser(Tokenizer *tokenizer) {
         m_tokenizer = tokenizer;
         m_current_token = nullptr;
         init();
     }
 
+    // Destructor
     Parser::~Parser() = default;
 
+    // Program
+    // expr* EOF
     nodes::StatementsNode *Parser::prog() {
         auto *statements = new nodes::StatementsNode();
 
@@ -344,6 +400,8 @@ namespace ast {
         return statements;
     }
 
+    // Main parse function
+    // Call prog function
     nodes::StatementsNode *Parser::parse() {
         return prog();
     }

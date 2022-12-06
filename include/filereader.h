@@ -9,7 +9,7 @@ class FileReader
     std::ifstream m_file;
 
 public:
-    FileReader(const char *filename);
+    explicit FileReader(const char *filename);
     ~FileReader();
 
     std::string read();

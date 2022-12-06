@@ -13,6 +13,7 @@ static const Token TOKENS[] = {
     Token(Token::SEMICOLON, ";"),
     Token(Token::QUESTION, "?"),
     Token(Token::COLON, ":"),
+    Token(Token::NOT, "!"),
     Token(Token::WHITESPACE, " "),
     Token(Token::WHITESPACE, "\t"),
     Token(Token::WHITESPACE, "\r"),

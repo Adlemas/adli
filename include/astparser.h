@@ -8,7 +8,7 @@ namespace ast
 
     namespace nodes
     {
-        enum _LiteralType
+        enum LiteralType
         {
             UNDEFINED,
             INT,
@@ -16,7 +16,6 @@ namespace ast
             STRING,
             BOOL,
         };
-        typedef enum _LiteralType LiteralType;
 
         // Char string for each literal type
         static const char *LITERAL_TYPE_STRINGS[] = {
@@ -27,32 +26,53 @@ namespace ast
             "BOOL",
         };
 
-        enum _NodeType
+        enum NodeType
         {
             BINARY,
             UNARY,
             LITERAL,
-            VARIABLE_DECLARATION,
-            VARIABLE_ASSIGNMENT,
-            VARIABLE,
             TERNARY,
             STATEMENTS,
             // TODO: Implement statement node type
             STATEMENT,
+            VARIABLE_DECLARATION,
+            VARIABLE_ASSIGNMENT,
+            VARIABLE,
         };
-        typedef enum _NodeType NodeType;
 
         // Char string for each node type
         static const char *NODE_TYPE_STRINGS[] = {
             "BINARY",
             "UNARY",
             "LITERAL",
-            "VARIABLE_DECLARATION",
-            "VARIABLE_ASSIGNMENT",
-            "VARIABLE",
             "TERNARY",
             "STATEMENTS",
             "STATEMENT",
+            "VARIABLE_DECLARATION",
+            "VARIABLE_ASSIGNMENT",
+            "VARIABLE",
+        };
+
+        enum Operator
+        {
+            NONE,
+            PLUS,
+            MINUS,
+            MULTIPLY,
+            DIVIDE,
+            MODULO,
+            NOT,
+        };
+
+        // Char string for each operator
+        static const char *OPERATOR_STRINGS[] = {
+                "NONE",
+                "PLUS",
+                "MINUS",
+                "MULTIPLY",
+                "DIVIDE",
+                "MODULO",
+                "NOT",
         };
 
         class Node
@@ -60,7 +80,7 @@ namespace ast
             NodeType m_type;
 
         public:
-            Node(NodeType type);
+            explicit Node(NodeType type);
 
             virtual ~Node() = 0;
 
@@ -74,31 +94,10 @@ namespace ast
 
         public:
             LiteralNode(LiteralType type, void *value);
-            ~LiteralNode();
+            ~LiteralNode() override;
 
             LiteralType literal_type();
             void *value();
-        };
-
-        enum _Operator
-        {
-            NONE,
-            PLUS,
-            MINUS,
-            MULTIPLY,
-            DIVIDE,
-            MODULO,
-        };
-        typedef enum _Operator Operator;
-
-        // Char string for each operator
-        static const char *OPERATOR_STRINGS[] = {
-            "NONE",
-            "PLUS",
-            "MINUS",
-            "MULTIPLY",
-            "DIVIDE",
-            "MODULO",
         };
 
         class BinaryNode : public Node
@@ -111,7 +110,7 @@ namespace ast
         public:
             BinaryNode(Node *left, Node *right);
             BinaryNode(Node *left, Node *right, Operator op);
-            ~BinaryNode();
+            ~BinaryNode() override;
 
             Node *left();
             Node *right();
@@ -122,15 +121,17 @@ namespace ast
             void setOp(Operator op);
         };
 
+        // UnaryNode
+        // Example: -1 , !true
         class UnaryNode : public Node
         {
             Node *m_node;
             Operator m_operator;
 
         public:
-            UnaryNode(Node *node);
+            explicit UnaryNode(Node *node);
             UnaryNode(Node *node, Operator op);
-            ~UnaryNode();
+            ~UnaryNode() override;
 
             Node *node();
             Operator op();
@@ -139,7 +140,8 @@ namespace ast
             void setOp(Operator op);
         };
 
-        // Ternalary node
+        // Ternary node
+        // Example: (a > b) ? a : b
         class TernaryNode : public Node
         {
             Node *m_left;
@@ -148,7 +150,7 @@ namespace ast
 
         public:
             TernaryNode(Node *left, Node *middle, Node *right);
-            ~TernaryNode();
+            ~TernaryNode() override;
 
             Node *left();
             Node *middle();
@@ -166,7 +168,7 @@ namespace ast
 
         public:
             StatementsNode();
-            ~StatementsNode();
+            ~StatementsNode() override;
 
             void addStatement(Node *statement);
             std::vector<Node *> *statements();
@@ -193,16 +195,16 @@ namespace ast
 
         Token::Type peek();
 
-        nodes::Node *factor();
+        nodes::Node *factor(); // UnaryNode | LiteralNode | ParenthesisNode
 
-        nodes::Node *term();
+        nodes::Node *term(); // factor ((MUL | DIV | MODULO) factor)*
 
-        nodes::Node *expr();
+        nodes::Node *expr(); // term ((PLUS | MINUS) term)*
 
-        nodes::StatementsNode *prog();
+        nodes::StatementsNode *prog(); // expr*
 
     public:
-        Parser(Tokenizer *tokenizer);
+        explicit Parser(Tokenizer *tokenizer);
         ~Parser();
 
         nodes::StatementsNode *parse();

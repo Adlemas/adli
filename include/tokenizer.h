@@ -22,6 +22,7 @@ struct Token
         WHITESPACE,
         QUESTION,
         COLON,
+        NOT,
         // End of file
         EOF_,
     };
@@ -47,6 +48,7 @@ static const char *TOKEN_TYPE_STRINGS[] = {
     "WHITESPACE",
     "QUESTION",
     "COLON",
+    "NOT",
     "EOF_",
 };
 
