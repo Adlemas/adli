@@ -37,7 +37,7 @@ namespace ast
             STATEMENT,
             VARIABLE_DECLARATION,
             VARIABLE_ASSIGNMENT,
-            VARIABLE,
+            IDENTIFIER,
         };
 
         // Char string for each node type
@@ -50,7 +50,7 @@ namespace ast
             "STATEMENT",
             "VARIABLE_DECLARATION",
             "VARIABLE_ASSIGNMENT",
-            "VARIABLE",
+            "IDENTIFIER",
         };
 
         enum Operator
@@ -98,6 +98,17 @@ namespace ast
 
             LiteralType literal_type();
             void *value();
+        };
+
+        class IdentifierNode : public Node
+        {
+            std::string m_name;
+
+        public:
+            explicit IdentifierNode(std::string name);
+            ~IdentifierNode() override;
+
+            std::string name();
         };
 
         class BinaryNode : public Node
