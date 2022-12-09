@@ -99,7 +99,12 @@ void Tokenizer::tokenize()
         }
 
         // identifier
-        // but for now raise an error
+        if (identifier())
+        {
+            continue;
+        }
+
+        // raise error if no token found
         error("Invalid character: " + std::string(1, m_source[pos]));
     }
 
@@ -137,6 +142,30 @@ bool Tokenizer::eof()
     m_tokens->push_back(new Token(Token::EOF_, "EOF"));
 
     return true;
+}
+
+bool Tokenizer::identifier() {
+    char c = m_source[pos];
+
+    // check if the character is a letter
+    if (isalpha(c))
+    {
+        std::string value = "";
+        value += c;
+        pos++;
+        c = m_source[pos];
+        while (isalnum(c))
+        {
+            value += c;
+            pos++;
+            c = m_source[pos];
+        }
+        pos--;
+        m_tokens->push_back(new Token(Token::IDENTIFIER, value));
+        return true;
+    }
+
+    return false;
 }
 
 bool Tokenizer::digit()
