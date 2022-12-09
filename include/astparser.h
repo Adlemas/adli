@@ -2,8 +2,16 @@
 #define PARSER_H
 
 #include <tokenizer.h>
+
 #include <nodes/node.h>
 #include <nodes/statements.h>
+#include <nodes/unary.h>
+#include <nodes/literal.h>
+#include <nodes/binary.h>
+#include <nodes/ternary.h>
+#include <nodes/identifier.h>
+#include <nodes/statements.h>
+#include <nodes/operator.h>
 
 namespace ast
 {

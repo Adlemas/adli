@@ -2,6 +2,11 @@
 #include <astdebug.h>
 #include <cstring>
 
+#include <nodes/binary.h>
+#include <nodes/literal.h>
+#include <nodes/identifier.h>
+#include <nodes/unary.h>
+
 void parse_tokenizer(Tokenizer &tokenizer) {
     using namespace ast;
 

@@ -1,6 +1,8 @@
 #ifndef IDENTIFIER_NODE_H
 #define IDENTIFIER_NODE_H
 
+#include <string>
+
 #include <nodes/node.h>
 
 namespace ast {
