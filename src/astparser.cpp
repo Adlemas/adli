@@ -1,6 +1,7 @@
 
 #include <astparser.h>
 #include <iostream>
+#include <utility>
 
 namespace ast {
 
@@ -205,6 +206,20 @@ namespace ast {
         }
 
         // --- Unary node class
+
+        // Identifier node class
+
+        IdentifierNode::IdentifierNode(std::string name) : Node(IDENTIFIER) {
+            m_name = *new std::string(std::move(name));
+        }
+
+        IdentifierNode::~IdentifierNode() {
+            m_name.clear();
+        }
+
+        std::string IdentifierNode::name() {
+            return m_name;
+        }
     } // namespace nodes
 
     // Parser class implementation
@@ -253,6 +268,10 @@ namespace ast {
             int *value = new int(std::stoi(token->value));
 
             return new nodes::LiteralNode(nodes::INT, value);
+        } else if (token->type == Token::IDENTIFIER) {
+            eat(Token::IDENTIFIER);
+
+            return new nodes::IdentifierNode(token->value);
         } else if (token->type == Token::PAREN_OPEN) {
             eat(Token::PAREN_OPEN);
             nodes::Node *result = expr();
