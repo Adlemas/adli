@@ -31,11 +31,15 @@ void print_tokens(Tokenizer &tokenizer) {
 void print_nodes(ast::nodes::StatementsNode *node) {
     using namespace ast::nodes;
     Node *n = node->current();
+    unsigned long int currIndex = 0;
 
     while (n != nullptr) {
-        print_node(n, 0);
+        std::cout << "Statement " << currIndex << ": " << std::endl;
+        print_node(n, 2);
+        std::cout << "----------------" << std::endl;
 
         node->next();
+        currIndex++;
         n = node->current();
     }
 }
@@ -85,6 +89,10 @@ void print_node(ast::nodes::Node *node, int tabulation) {
             std::cout << std::string(tabulation + TABULATION_SIZE, ' ') << "Value: "
                       << "UNDEFINED" << std::endl;
         }
+    } else if (node->type() == NodeType::IDENTIFIER) {
+        auto *identifier = (IdentifierNode *) node;
+
+        std::cout << std::string(tabulation, ' ') << "IdentifierNode: " << identifier->name() << std::endl;
     } else if (node->type() == NodeType::STATEMENTS) {
         auto *statements = (StatementsNode *) node;
 
