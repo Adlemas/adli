@@ -23,6 +23,7 @@ struct Token
         QUESTION,
         COLON,
         NOT,
+        IDENTIFIER,
         // End of file
         EOF_,
     };
@@ -49,6 +50,7 @@ static const char *TOKEN_TYPE_STRINGS[] = {
     "QUESTION",
     "COLON",
     "NOT",
+    "IDENTIFIER",
     "EOF_",
 };
 
@@ -73,6 +75,10 @@ class Tokenizer
 
     // Token
     bool token();
+
+    // Identifier
+    // example: hello, hello_world, helloWorld
+    bool identifier();
 
     // EOF
     bool eof();
