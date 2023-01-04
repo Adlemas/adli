@@ -13,7 +13,7 @@ int main()
     // std::cout << "Enter source: ";
     // std::getline(std::cin, source);
 
-    FileReader file("../test/multiple_expressions.adli");
+    FileReader file("../test/main.adli");
 
     std::string source = file.read();
 
