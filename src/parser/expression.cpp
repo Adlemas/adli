@@ -40,11 +40,11 @@ nodes::Node *Parser::expr() {
             // QUESTION - ternary operator
 
             eat(Token::QUESTION);
-            nodes::Node *middle = expr();
+            nodes::Node *left = expr();
             eat(Token::COLON);
             nodes::Node *right = expr();
 
-            result = new nodes::TernaryNode(result, middle, right);
+            result = new nodes::TernaryNode(result, left, right);
         } else {
             error(std::string("Unexpected token \"" + token->value + "\"").c_str());
         }
