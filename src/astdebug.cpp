@@ -111,12 +111,20 @@ void print_node(ast::nodes::Node *node, int tabulation) {
             statements->next();
             pNode = statements->current();
         }
-    } else if (node->type() == NodeType::TERNARY) {
+    } else if (node->type() == NodeType::UNARY) {
         auto *unary = (UnaryNode *) node;
 
         std::cout << std::string(tabulation, ' ') << "UnaryNode: " << (unary->op() == Operator::MINUS ? '-' : '+')
                   << std::endl;
 
         print_node(unary->node(), tabulation + TABULATION_SIZE);
+    } else if (node->type() == NodeType::TERNARY) {
+        auto *ternary = (TernaryNode *) node;
+
+        std::cout << std::string(tabulation, ' ') << "TernaryNode: " << std::endl;
+
+        print_node(ternary->condition(), tabulation + TABULATION_SIZE);
+        print_node(ternary->left(), tabulation + TABULATION_SIZE);
+        print_node(ternary->right(), tabulation + TABULATION_SIZE);
     }
 }
