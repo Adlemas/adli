@@ -16,6 +16,8 @@ nodes::Node *Parser::expr() {
         Token *token = m_current_token;
 
         if (token->type == Token::PLUS) {
+            // Parse addition
+
             eat(Token::PLUS);
             nodes::Node *right = term();
             node->setRight(right);
@@ -24,6 +26,8 @@ nodes::Node *Parser::expr() {
             result = node;
             node = new nodes::BinaryNode(result, nullptr);
         } else if (token->type == Token::MINUS) {
+            // Parse subtraction
+
             eat(Token::MINUS);
             nodes::Node *right = term();
             node->setRight(right);
@@ -32,8 +36,9 @@ nodes::Node *Parser::expr() {
             result = node;
             node = new nodes::BinaryNode(result, nullptr);
         }
-            // QUESTION - ternary operator
         else if (token->type == Token::QUESTION) {
+            // QUESTION - ternary operator
+
             eat(Token::QUESTION);
             nodes::Node *middle = expr();
             eat(Token::COLON);
