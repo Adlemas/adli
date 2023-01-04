@@ -150,7 +150,7 @@ bool Tokenizer::identifier() {
     // check if the character is a letter
     if (isalpha(c))
     {
-        std::string value = "";
+        std::string value;
         value += c;
         pos++;
         c = m_source[pos];
