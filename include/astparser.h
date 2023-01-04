@@ -28,12 +28,30 @@ namespace ast
 
         Token::Type peek();
 
-        nodes::Node *factor(); // UnaryNode | LiteralNode | ParenthesisNode
+        /**
+         * Literal: INT
+         * Identifier
+         * Parenthesis: '(' expr ')'
+         * Unary: '-' factor
+         *      | '+' factor
+         *      | '!' factor
+         */
+        nodes::Node *factor();
 
-        nodes::Node *term(); // factor ((MUL | DIV | MODULO) factor)*
+        /**
+         * Factor: factor ('*' | '/' | '%') factor
+         */
+        nodes::Node *term();
 
-        nodes::Node *expr(); // term ((PLUS | MINUS) term)*
+        /**
+         * Expr: term ('+' | '-') term
+         *     | ternary ('?' expr ':' expr)
+         */
+        nodes::Node *expr();
 
+        /**
+         * Program: statement ';' (statement)*
+         */
         nodes::StatementsNode *prog(); // expr*
 
     public:
