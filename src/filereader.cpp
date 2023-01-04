@@ -6,7 +6,7 @@ FileReader::FileReader(const char *filename)
 
     if (!m_file.is_open())
     {
-        throw std::runtime_error("Could not open file");
+        throw std::runtime_error("Could not open file at " + std::string(filename));
     }
 }
 
