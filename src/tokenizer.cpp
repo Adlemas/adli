@@ -19,6 +19,8 @@ static const Token TOKENS[] = {
     Token(Token::WHITESPACE, "\t"),
     Token(Token::WHITESPACE, "\r"),
     Token(Token::WHITESPACE, "\n"),
+    Token(Token::DOUBLE_EQUAL, "=="),
+    Token(Token::EQUAL, "="),
 };
 
 Tokenizer::Tokenizer(std::string source) : m_source(std::move(source))

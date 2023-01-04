@@ -24,6 +24,9 @@ struct Token
         COLON,
         NOT,
         IDENTIFIER,
+        // double equal & equal
+        DOUBLE_EQUAL,
+        EQUAL,
         // End of file
         EOF_,
     };
@@ -51,6 +54,8 @@ static const char *TOKEN_TYPE_STRINGS[] = {
     "COLON",
     "NOT",
     "IDENTIFIER",
+    "DOUBLE_EQUAL",
+    "EQUAL",
     "EOF_",
 };
 
