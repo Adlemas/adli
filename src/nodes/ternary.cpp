@@ -6,35 +6,35 @@ using namespace ast::nodes;
 
 TernaryNode::TernaryNode(Node *left, Node *middle, Node *right)
         : Node(TERNARY) {
-    m_left = left;
-    m_middle = middle;
+    m_condition = left;
+    m_left = middle;
     m_right = right;
 }
 
 TernaryNode::~TernaryNode() {
+    delete m_condition;
     delete m_left;
-    delete m_middle;
     delete m_right;
+}
+
+Node *TernaryNode::condition() {
+    return m_condition;
 }
 
 Node *TernaryNode::left() {
     return m_left;
 }
 
-Node *TernaryNode::middle() {
-    return m_middle;
-}
-
 Node *TernaryNode::right() {
     return m_right;
 }
 
-void TernaryNode::setLeft(Node *left) {
-    m_left = left;
+void TernaryNode::setCondition(Node *condition) {
+    m_condition = condition;
 }
 
-void TernaryNode::setMiddle(Node *middle) {
-    m_middle = middle;
+void TernaryNode::setLeft(Node *left) {
+    m_left = left;
 }
 
 void TernaryNode::setRight(Node *right) {
